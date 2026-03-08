@@ -49,12 +49,51 @@ export function CommentCodePicker({
   }, [open])
 
   useEffect(() => {
-    if (open && buttonRef.current) {
+    if (!open) return
+
+    let rafId: number | null = null
+
+    const updatePosition = () => {
+      if (!buttonRef.current) return
+
       const rect = buttonRef.current.getBoundingClientRect()
-      setPosition({
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX + rect.width / 2,
+      const gap = 4
+      const viewportPadding = 8
+      const modalHeight = containerRef.current?.offsetHeight ?? 240
+      const modalWidth = containerRef.current?.offsetWidth ?? 220
+
+      const preferredTop = rect.bottom + gap
+      const top =
+        preferredTop + modalHeight > window.innerHeight - viewportPadding
+          ? Math.max(viewportPadding, rect.top - modalHeight - gap)
+          : preferredTop
+
+      const centeredLeft = rect.left + rect.width / 2
+      const minLeft = viewportPadding + modalWidth / 2
+      const maxLeft = window.innerWidth - viewportPadding - modalWidth / 2
+      const left = Math.min(Math.max(centeredLeft, minLeft), maxLeft)
+
+      setPosition({ top, left })
+    }
+
+    const scheduleUpdatePosition = () => {
+      if (rafId !== null) return
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null
+        updatePosition()
       })
+    }
+
+    updatePosition()
+    window.addEventListener("resize", scheduleUpdatePosition)
+    window.addEventListener("scroll", scheduleUpdatePosition, true)
+
+    return () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId)
+      }
+      window.removeEventListener("resize", scheduleUpdatePosition)
+      window.removeEventListener("scroll", scheduleUpdatePosition, true)
     }
   }, [open])
 
