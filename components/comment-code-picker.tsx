@@ -51,6 +51,8 @@ export function CommentCodePicker({
   useEffect(() => {
     if (!open) return
 
+    let rafId: number | null = null
+
     const updatePosition = () => {
       if (!buttonRef.current) return
 
@@ -74,13 +76,24 @@ export function CommentCodePicker({
       setPosition({ top, left })
     }
 
+    const scheduleUpdatePosition = () => {
+      if (rafId !== null) return
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null
+        updatePosition()
+      })
+    }
+
     updatePosition()
-    window.addEventListener("resize", updatePosition)
-    window.addEventListener("scroll", updatePosition, true)
+    window.addEventListener("resize", scheduleUpdatePosition)
+    window.addEventListener("scroll", scheduleUpdatePosition, true)
 
     return () => {
-      window.removeEventListener("resize", updatePosition)
-      window.removeEventListener("scroll", updatePosition, true)
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId)
+      }
+      window.removeEventListener("resize", scheduleUpdatePosition)
+      window.removeEventListener("scroll", scheduleUpdatePosition, true)
     }
   }, [open])
 
