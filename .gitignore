@@ -6,4 +6,5 @@ build
 .env
 .DS_Store
 .next
+package-lock.json
 
