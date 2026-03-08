@@ -15,6 +15,7 @@ import { toast } from "sonner"
 import { pdf } from "@react-pdf/renderer"
 import {
   ReportCardDocument,
+  type ReportCardCommentCode,
   type ReportCardStudent,
 } from "@/components/report-card-pdf"
 import {
@@ -131,9 +132,10 @@ export default function ReportsPage() {
         query(collection(db, "commentCodes"), orderBy("code", "asc"))
       )
       const commentCodesMap: Record<number, string> = {}
-      commentsSnap.docs.forEach((d) => {
+      const commentCodesLegend: ReportCardCommentCode[] = commentsSnap.docs.map((d) => {
         const data = d.data() as CommentCode
         commentCodesMap[data.code] = data.text
+        return { code: data.code, text: data.text }
       })
 
       // Fetch all students for target sections
@@ -223,6 +225,7 @@ export default function ReportsPage() {
       const blob = await pdf(
         <ReportCardDocument
           students={reportStudents}
+          commentCodes={commentCodesLegend}
           markingPeriodName={mpName}
           schoolName={schoolName}
         />

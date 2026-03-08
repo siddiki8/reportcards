@@ -7,7 +7,7 @@ import { db } from "@/lib/firebase"
 import { GraduationCap, Loader2, BookOpen } from "lucide-react"
 import Link from "next/link"
 
-export default function TeacherLoginPage() {
+function TeacherLoginPageContent() {
   const router = useRouter()
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -103,3 +103,11 @@ export default function TeacherLoginPage() {
     </main>
   )
 }
+
+import dynamic from "next/dynamic"
+
+const TeacherLoginPage = dynamic(() => Promise.resolve(TeacherLoginPageContent), {
+  ssr: false,
+})
+
+export default TeacherLoginPage

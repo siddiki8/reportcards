@@ -28,6 +28,21 @@ interface CommentCode {
   text: string
 }
 
+const DEFAULT_COMMENT_CODES: Array<{ code: number; text: string }> = [
+  { code: 1, text: "Respectful and Well Behaved" },
+  { code: 2, text: "Tries Their Best" },
+  { code: 3, text: "Participates Actively in Class" },
+  { code: 4, text: "Completes Assignments on Time" },
+  { code: 5, text: "Follows Directions Carefully" },
+  { code: 6, text: "Shows Kindness and Cooperation" },
+  { code: 7, text: "Demonstrates Steady Improvement" },
+  { code: 8, text: "Comes Prepared and Ready to Learn" },
+  { code: 9, text: "Needs Reminders to Stay Focused" },
+  { code: 10, text: "Often Has Missing or Incomplete Work" },
+  { code: 11, text: "Disrupts Class and Needs Behavior Improvement" },
+  { code: 12, text: "Request Parent Conference" },
+]
+
 export default function CommentsPage() {
   const [comments, setComments] = useState<CommentCode[]>([])
   const [loading, setLoading] = useState(true)
@@ -36,6 +51,7 @@ export default function CommentsPage() {
   const [code, setCode] = useState("")
   const [text, setText] = useState("")
   const [saving, setSaving] = useState(false)
+  const [seedingDefaults, setSeedingDefaults] = useState(false)
 
   const fetchComments = async () => {
     try {
@@ -133,6 +149,43 @@ export default function CommentsPage() {
     }
   }
 
+  const handleLoadDefaults = async () => {
+    setSeedingDefaults(true)
+    try {
+      const q = query(collection(db, "commentCodes"), orderBy("code", "asc"))
+      const snap = await getDocs(q)
+      const existingCodes = new Set(
+        snap.docs.map((d) => (d.data() as { code?: number }).code).filter((c): c is number => typeof c === "number")
+      )
+
+      const missingDefaults = DEFAULT_COMMENT_CODES.filter(
+        (item) => !existingCodes.has(item.code)
+      )
+
+      if (missingDefaults.length === 0) {
+        toast.success("Default comment codes are already loaded")
+        return
+      }
+
+      await Promise.all(
+        missingDefaults.map((item) =>
+          addDoc(collection(db, "commentCodes"), {
+            code: item.code,
+            text: item.text,
+          })
+        )
+      )
+
+      toast.success(`Added ${missingDefaults.length} default comment code(s)`)
+      await fetchComments()
+    } catch (err) {
+      console.error("Failed to load default comment codes:", err)
+      toast.error("Failed to load default comment codes")
+    } finally {
+      setSeedingDefaults(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -143,7 +196,7 @@ export default function CommentsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Comment Codes
@@ -152,13 +205,27 @@ export default function CommentsPage() {
             Manage comment codes used on report cards
           </p>
         </div>
-        <button
-          onClick={openAdd}
-          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-        >
-          <Plus className="h-4 w-4" />
-          Add Code
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleLoadDefaults}
+            disabled={seedingDefaults}
+            className="flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary disabled:opacity-50"
+          >
+            {seedingDefaults ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <MessageSquareText className="h-4 w-4" />
+            )}
+            Load Default 12 Codes
+          </button>
+          <button
+            onClick={openAdd}
+            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            <Plus className="h-4 w-4" />
+            Add Code
+          </button>
+        </div>
       </div>
 
       {comments.length === 0 ? (

@@ -32,6 +32,10 @@ interface PreviewRow {
   sectionName: string | null
 }
 
+function normalizeSectionName(value: string) {
+  return value.toLowerCase().trim()
+}
+
 function parseCSVRows(text: string, sections: Section[]): PreviewRow[] {
   const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
   const dataLines =
@@ -39,7 +43,7 @@ function parseCSVRows(text: string, sections: Section[]): PreviewRow[] {
 
   const sectionLookup = new Map<string, Section>()
   for (const sec of sections) {
-    sectionLookup.set(sec.name.toLowerCase().trim(), sec)
+    sectionLookup.set(normalizeSectionName(sec.name), sec)
   }
 
   return dataLines
@@ -52,7 +56,7 @@ function parseCSVRows(text: string, sections: Section[]): PreviewRow[] {
           ? `${parts[1]} ${parts[2]}`.trim()
           : (parts[1] ?? "")
       if (!studentName) return null
-      const matched = sectionLookup.get(grade.toLowerCase().trim())
+      const matched = sectionLookup.get(normalizeSectionName(grade))
       return {
         grade,
         name: studentName,
@@ -100,14 +104,57 @@ export default function ImportStudentsPage() {
 
   const handleImport = async () => {
     if (!preview) return
-    const validRows = preview.filter((r) => r.sectionId)
-    if (validRows.length === 0) {
-      toast.error("No rows have a matching section")
+    const importableRows = preview.filter((r) => normalizeSectionName(r.grade))
+    if (importableRows.length === 0) {
+      toast.error("No rows have a valid section name")
       return
     }
 
     setImporting(true)
     try {
+      const sectionLookup = new Map<string, Section>()
+      for (const section of sections) {
+        sectionLookup.set(normalizeSectionName(section.name), section)
+      }
+
+      const missingSections = new Map<string, string>()
+      for (const row of importableRows) {
+        const key = normalizeSectionName(row.grade)
+        if (!key || sectionLookup.has(key) || missingSections.has(key)) continue
+        missingSections.set(key, row.grade.trim())
+      }
+
+      let nextOrder = sections.length
+      const createdSections: Section[] = []
+      for (const [key, name] of missingSections) {
+        const sectionRef = await addDoc(collection(db, "sections"), {
+          name,
+          subjects: ["Period 1", "Period 2", "Period 3"],
+          order: nextOrder,
+        })
+
+        const createdSection: Section = {
+          id: sectionRef.id,
+          name,
+          order: nextOrder,
+        }
+        sectionLookup.set(key, createdSection)
+        createdSections.push(createdSection)
+        nextOrder += 1
+      }
+
+      const resolvedRows = importableRows
+        .map((row) => {
+          const section = sectionLookup.get(normalizeSectionName(row.grade))
+          if (!section) return null
+          return {
+            ...row,
+            sectionId: section.id,
+            sectionName: section.name,
+          }
+        })
+        .filter((r): r is PreviewRow => r !== null)
+
       const studentsSnap = await getDocs(collection(db, "students"))
       const orderMap: Record<string, number> = {}
       studentsSnap.docs.forEach((d) => {
@@ -117,7 +164,7 @@ export default function ImportStudentsPage() {
 
       const localOffset: Record<string, number> = {}
       await Promise.all(
-        validRows.map((row) => {
+        resolvedRows.map((row) => {
           const sid = row.sectionId!
           localOffset[sid] = (localOffset[sid] ?? 0) + 1
           const order = (orderMap[sid] ?? 0) + localOffset[sid] - 1
@@ -129,8 +176,12 @@ export default function ImportStudentsPage() {
         })
       )
 
+      if (createdSections.length > 0) {
+        setSections((prev) => [...prev, ...createdSections])
+      }
+
       toast.success(
-        `Imported ${validRows.length} student${validRows.length !== 1 ? "s" : ""}`
+        `Imported ${resolvedRows.length} student${resolvedRows.length !== 1 ? "s" : ""}${createdSections.length > 0 ? ` and created ${createdSections.length} new section${createdSections.length !== 1 ? "s" : ""}` : ""}`
       )
       setPreview(null)
       setFileName("")
@@ -143,7 +194,11 @@ export default function ImportStudentsPage() {
   }
 
   const matched = preview?.filter((r) => r.sectionId) ?? []
-  const unmatched = preview?.filter((r) => !r.sectionId) ?? []
+  const willCreate =
+    preview?.filter((r) => !r.sectionId && normalizeSectionName(r.grade)) ?? []
+  const invalidRows =
+    preview?.filter((r) => !r.sectionId && !normalizeSectionName(r.grade)) ?? []
+  const importCount = matched.length + willCreate.length
 
   if (loadingSections) {
     return (
@@ -172,8 +227,8 @@ export default function ImportStudentsPage() {
           <span className="font-medium text-card-foreground">
             grade / section name
           </span>{" "}
-          — it must match one of your sections exactly (case-insensitive). Two
-          formats are accepted:
+          — if it does not match an existing section, a new section will be
+          created automatically. Two formats are accepted:
         </p>
         <div className="flex flex-col gap-1.5">
           <code className="rounded bg-secondary px-3 py-1.5 text-xs font-mono text-secondary-foreground">
@@ -256,16 +311,24 @@ export default function ImportStudentsPage() {
             </button>
           </div>
 
-          {/* Unmatched warning */}
-          {unmatched.length > 0 && (
+          {willCreate.length > 0 && (
+            <div className="flex items-start gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3">
+              <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+              <p className="text-sm text-primary">
+                {willCreate.length} row{willCreate.length !== 1 ? "s" : ""} use
+                section names that do not exist yet. These sections will be
+                created:{" "}
+                {[...new Set(willCreate.map((r) => `"${r.grade}"`))].join(", ")}
+              </p>
+            </div>
+          )}
+
+          {invalidRows.length > 0 && (
             <div className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3">
               <AlertCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
               <p className="text-sm text-destructive">
-                {unmatched.length} row
-                {unmatched.length !== 1 ? "s" : ""} have an unrecognized
-                section and will be skipped:{" "}
-                {[...new Set(unmatched.map((r) => `"${r.grade}"`))]
-                  .join(", ")}
+                {invalidRows.length} row{invalidRows.length !== 1 ? "s" : ""}{" "}
+                have a blank section name and will be skipped.
               </p>
             </div>
           )}
@@ -304,10 +367,15 @@ export default function ImportStudentsPage() {
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           {row.sectionName}
                         </span>
+                      ) : normalizeSectionName(row.grade) ? (
+                        <span className="flex items-center gap-1.5 text-primary">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          Will create
+                        </span>
                       ) : (
                         <span className="flex items-center gap-1.5 text-destructive">
                           <AlertCircle className="h-3.5 w-3.5" />
-                          Not found
+                          Missing section
                         </span>
                       )}
                     </td>
@@ -320,10 +388,10 @@ export default function ImportStudentsPage() {
           {/* Action bar */}
           <div className="flex items-center justify-between pt-1">
             <p className="text-sm text-muted-foreground">
-              {matched.length} student{matched.length !== 1 ? "s" : ""} will
-              be imported
-              {unmatched.length > 0
-                ? `, ${unmatched.length} will be skipped`
+              {importCount} student{importCount !== 1 ? "s" : ""} will be
+              imported
+              {invalidRows.length > 0
+                ? `, ${invalidRows.length} will be skipped`
                 : ""}
             </p>
             <div className="flex gap-2">
@@ -335,12 +403,12 @@ export default function ImportStudentsPage() {
               </button>
               <button
                 onClick={handleImport}
-                disabled={importing || matched.length === 0}
+                disabled={importing || importCount === 0}
                 className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
               >
                 {importing && <Loader2 className="h-4 w-4 animate-spin" />}
-                Import {matched.length} Student
-                {matched.length !== 1 ? "s" : ""}
+                Import {importCount} Student
+                {importCount !== 1 ? "s" : ""}
               </button>
             </div>
           </div>

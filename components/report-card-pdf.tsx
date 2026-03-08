@@ -87,6 +87,44 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: "#ffffff",
   },
+  commentCodesBox: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: G_BORDER,
+    borderRadius: 4,
+    padding: 10,
+    backgroundColor: "#ffffff",
+  },
+  commentCodesTitle: {
+    fontSize: 8,
+    fontWeight: 700,
+    color: G,
+    textTransform: "uppercase" as const,
+    letterSpacing: 0.4,
+    marginBottom: 6,
+  },
+  commentCodeRow: {
+    flexDirection: "row",
+    marginBottom: 3,
+    alignItems: "flex-start",
+  },
+  commentCodeLabel: {
+    width: 18,
+    fontSize: 7,
+    fontWeight: 700,
+    color: TEXT,
+  },
+  commentCodeText: {
+    flex: 1,
+    fontSize: 7,
+    color: G_MID,
+    lineHeight: 1.3,
+  },
+  commentCodeOverflow: {
+    fontSize: 7,
+    color: G_MUTED,
+    marginTop: 2,
+  },
   scaleTitle: {
     fontSize: 9,
     fontWeight: 700,
@@ -397,7 +435,7 @@ function getGradeColor(grade: number | string | null) {
 }
 
 function getLetterGrade(grade: number | string | null): string {
-  if (grade === null || grade === undefined) return "N/A"
+  if (grade === null || grade === undefined) return ""
   if (grade === "INC") return "INC"
   if (typeof grade === "string") return grade
   if (grade >= 90) return "A"
@@ -418,20 +456,31 @@ export interface ReportCardStudent {
   }[]
 }
 
+export interface ReportCardCommentCode {
+  code: number
+  text: string
+}
+
 interface ReportCardDocumentProps {
   students: ReportCardStudent[]
+  commentCodes: ReportCardCommentCode[]
   markingPeriodName: string
   schoolName: string
 }
 
 export function ReportCardDocument({
   students,
+  commentCodes,
   markingPeriodName,
   schoolName,
 }: ReportCardDocumentProps) {
   return (
     <Document>
-      {students.map((student) => (
+      {students.map((student) => {
+        const backCodes = commentCodes.slice(0, 12)
+        const hiddenCount = Math.max(commentCodes.length - backCodes.length, 0)
+
+        return (
         <Fragment key={student.id}>
           {/*
            * ── OUTSIDE (Page 1) ────────────────────────────────────────────────
@@ -472,6 +521,26 @@ export function ReportCardDocument({
                       <Text style={styles.scaleRange}>{range}</Text>
                     </View>
                   ))}
+                </View>
+                <View style={styles.commentCodesBox}>
+                  <Text style={styles.commentCodesTitle}>Comment Codes</Text>
+                  {backCodes.length > 0 ? (
+                    backCodes.map((item) => (
+                      <View key={item.code} style={styles.commentCodeRow}>
+                        <Text style={styles.commentCodeLabel}>{item.code}.</Text>
+                        <Text style={styles.commentCodeText}>{item.text}</Text>
+                      </View>
+                    ))
+                  ) : (
+                    <Text style={styles.commentCodeText}>
+                      No comment codes configured.
+                    </Text>
+                  )}
+                  {hiddenCount > 0 ? (
+                    <Text style={styles.commentCodeOverflow}>
+                      +{hiddenCount} more code(s) available in system
+                    </Text>
+                  ) : null}
                 </View>
               </View>
               <View style={styles.backFooter}>
@@ -540,7 +609,7 @@ export function ReportCardDocument({
                   >
                     <Text style={[styles.tableCell, styles.subjectCell]}>{subj.name}</Text>
                     <Text style={[styles.tableCell, styles.gradeCell, getGradeColor(subj.grade)]}>
-                      {subj.grade !== null && subj.grade !== undefined ? subj.grade : "N/A"}
+                      {subj.grade !== null && subj.grade !== undefined ? subj.grade : ""}
                     </Text>
                     <Text style={[styles.tableCell, styles.gradeCell, getGradeColor(subj.grade)]}>
                       {getLetterGrade(subj.grade)}
@@ -582,7 +651,8 @@ export function ReportCardDocument({
             </View>
           </Page>
         </Fragment>
-      ))}
+        )
+      })}
     </Document>
   )
 }
