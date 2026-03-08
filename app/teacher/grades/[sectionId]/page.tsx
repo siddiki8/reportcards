@@ -309,6 +309,18 @@ export default function GradeEntryPage({
         </div>
       </div>
 
+      <div className="rounded-lg border border-border bg-secondary/30 px-4 py-3 text-sm">
+        <p className="font-medium text-foreground">Grade entry instructions</p>
+        <ul className="mt-1 list-disc pl-5 text-muted-foreground">
+          <li>0-59: F</li>
+          <li>60-69: D</li>
+          <li>70-79: C</li>
+          <li>80-89: B</li>
+          <li>90-100: A</li>
+          <li>Use the red INC button to mark an incomplete.</li>
+        </ul>
+      </div>
+
       {students.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16">
           <p className="text-muted-foreground font-medium">
@@ -385,6 +397,16 @@ export default function GradeEntryPage({
                               </div>
                             )}
                           </div>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleGradeChange(student.id, subj, "INC")
+                            }
+                            className="rounded border border-red-300 bg-red-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-red-700 hover:bg-red-200"
+                            title="Mark as incomplete"
+                          >
+                            INC
+                          </button>
                           <CommentCodePicker
                             allCodes={commentCodes}
                             selectedCodes={
@@ -410,7 +432,8 @@ export default function GradeEntryPage({
       )}
 
       <p className="text-xs text-muted-foreground text-center">
-        Grades auto-save as you type. Enter values 0-100 or type "INC" for incomplete.
+        Grades auto-save as you type. Enter values 0-100, or use the red INC
+        button for incomplete.
       </p>
     </div>
   )
