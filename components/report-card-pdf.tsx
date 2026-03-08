@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: G_BORDER,
     borderRadius: 4,
-    padding: 10,
+    padding: 8,
     backgroundColor: "#ffffff",
   },
   commentCodesTitle: {
@@ -101,24 +101,24 @@ const styles = StyleSheet.create({
     color: G,
     textTransform: "uppercase" as const,
     letterSpacing: 0.4,
-    marginBottom: 6,
+    marginBottom: 4,
   },
   commentCodeRow: {
     flexDirection: "row",
-    marginBottom: 3,
+    marginBottom: 2,
     alignItems: "flex-start",
   },
   commentCodeLabel: {
     width: 18,
-    fontSize: 7,
+    fontSize: 6.5,
     fontWeight: 700,
     color: TEXT,
   },
   commentCodeText: {
     flex: 1,
-    fontSize: 7,
+    fontSize: 6.5,
     color: G_MID,
-    lineHeight: 1.3,
+    lineHeight: 1.25,
   },
   commentCodeOverflow: {
     fontSize: 7,
@@ -477,8 +477,8 @@ export function ReportCardDocument({
   return (
     <Document>
       {students.map((student) => {
-        const backCodes = commentCodes.slice(0, 12)
-        const hiddenCount = Math.max(commentCodes.length - backCodes.length, 0)
+        // Display all comment codes dynamically
+        const backCodes = commentCodes
 
         return (
         <Fragment key={student.id}>
@@ -536,11 +536,6 @@ export function ReportCardDocument({
                       No comment codes configured.
                     </Text>
                   )}
-                  {hiddenCount > 0 ? (
-                    <Text style={styles.commentCodeOverflow}>
-                      +{hiddenCount} more code(s) available in system
-                    </Text>
-                  ) : null}
                 </View>
               </View>
               <View style={styles.backFooter}>
