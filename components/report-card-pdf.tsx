@@ -120,11 +120,6 @@ const styles = StyleSheet.create({
     color: G_MID,
     lineHeight: 1.25,
   },
-  commentCodeOverflow: {
-    fontSize: 7,
-    color: G_MUTED,
-    marginTop: 2,
-  },
   scaleTitle: {
     fontSize: 9,
     fontWeight: 700,
@@ -477,9 +472,6 @@ export function ReportCardDocument({
   return (
     <Document>
       {students.map((student) => {
-        // Display all comment codes dynamically
-        const backCodes = commentCodes
-
         return (
         <Fragment key={student.id}>
           {/*
@@ -524,8 +516,8 @@ export function ReportCardDocument({
                 </View>
                 <View style={styles.commentCodesBox}>
                   <Text style={styles.commentCodesTitle}>Comment Codes</Text>
-                  {backCodes.length > 0 ? (
-                    backCodes.map((item) => (
+                  {commentCodes.length > 0 ? (
+                    commentCodes.map((item) => (
                       <View key={item.code} style={styles.commentCodeRow}>
                         <Text style={styles.commentCodeLabel}>{item.code}.</Text>
                         <Text style={styles.commentCodeText}>{item.text}</Text>
