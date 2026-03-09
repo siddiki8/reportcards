@@ -214,7 +214,7 @@ export default function GradeEntryPage({
       } else {
         const numValue = parseInt(value, 10)
         if (!isNaN(numValue)) {
-          gradeValue = Math.min(100, Math.max(0, numValue))
+          gradeValue = Math.min(105, Math.max(0, numValue))
         }
       }
 
@@ -317,6 +317,7 @@ export default function GradeEntryPage({
           <li>70-79: C</li>
           <li>80-89: B</li>
           <li>90-100: A</li>
+          <li>101-105: A+</li>
           <li>Use the red INC button to mark an incomplete.</li>
         </ul>
       </div>
@@ -384,7 +385,7 @@ export default function GradeEntryPage({
                               }
                               className="w-16 rounded-md border border-input bg-background px-2 py-1.5 text-center text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring uppercase"
                               placeholder="--"
-                              title="Enter 0-100 or INC"
+                              title="Enter 0-105 or INC"
                             />
                             {isSaving && (
                               <div className="absolute -right-5 top-1/2 -translate-y-1/2">
@@ -432,7 +433,7 @@ export default function GradeEntryPage({
       )}
 
       <p className="text-xs text-muted-foreground text-center">
-        Grades auto-save as you type. Enter values 0-100, or use the red INC
+        Grades auto-save as you type. Enter values 0-105, or use the red INC
         button for incomplete.
       </p>
     </div>

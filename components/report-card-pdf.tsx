@@ -433,6 +433,7 @@ function getLetterGrade(grade: number | string | null): string {
   if (grade === null || grade === undefined) return ""
   if (grade === "INC") return "INC"
   if (typeof grade === "string") return grade
+  if (grade > 100) return "A+"
   if (grade >= 90) return "A"
   if (grade >= 80) return "B"
   if (grade >= 70) return "C"
