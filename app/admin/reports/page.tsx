@@ -17,6 +17,7 @@ import {
   ReportCardDocument,
   type ReportCardCommentCode,
   type ReportCardStudent,
+  type ReportCardAdministrator,
 } from "@/components/report-card-pdf"
 import {
   FileText,
@@ -66,6 +67,7 @@ export default function ReportsPage() {
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
   const [schoolName, setSchoolName] = useState("Darul Islah Sunday School")
+  const [administrators, setAdministrators] = useState<ReportCardAdministrator[]>([])
 
   useEffect(() => {
     async function fetchData() {
@@ -75,6 +77,10 @@ export default function ReportsPage() {
           getDocs(collection(db, "markingPeriods")),
           getDoc(doc(db, "settings", "school")),
         ])
+        const adminsDoc = await getDoc(doc(db, "settings", "administrators"))
+        if (adminsDoc.exists()) {
+          setAdministrators((adminsDoc.data().list as ReportCardAdministrator[]) ?? [])
+        }
 
         const secs = sectionsSnap.docs.map((d) => ({
           id: d.id,
@@ -226,6 +232,7 @@ export default function ReportsPage() {
         <ReportCardDocument
           students={reportStudents}
           commentCodes={commentCodesLegend}
+          administrators={administrators}
           markingPeriodName={mpName}
           schoolName={schoolName}
         />

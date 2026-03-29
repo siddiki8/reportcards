@@ -143,6 +143,51 @@ const styles = StyleSheet.create({
     fontSize: 8,
     color: G_MUTED,
   },
+  adminBox: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: G_BORDER,
+    borderRadius: 4,
+    padding: 8,
+    backgroundColor: "#ffffff",
+  },
+  adminBoxTitle: {
+    fontSize: 8,
+    fontWeight: 700,
+    color: G,
+    textTransform: "uppercase" as const,
+    letterSpacing: 0.4,
+    marginBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: G_BORDER,
+    paddingBottom: 4,
+  },
+  adminEntry: {
+    marginBottom: 5,
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e8f0ec",
+  },
+  adminEntryLast: {
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
+  adminName: {
+    fontSize: 7.5,
+    fontWeight: 700,
+    color: TEXT,
+    marginBottom: 1,
+  },
+  adminPosition: {
+    fontSize: 6.5,
+    color: G_MID,
+    marginBottom: 2,
+  },
+  adminContact: {
+    fontSize: 6.5,
+    color: G_MUTED,
+    lineHeight: 1.4,
+  },
   backFooter: {
     borderTopWidth: 1,
     borderTopColor: G_BORDER,
@@ -157,66 +202,154 @@ const styles = StyleSheet.create({
   // ── OUTSIDE : Cover panel (right half — becomes front cover when folded) ─
   coverPanel: {
     width: "50%",
-    backgroundColor: G,
-    padding: 32,
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    borderLeftWidth: 1,
+    borderLeftWidth: 2,
     borderLeftColor: G_DARK,
+    overflow: "hidden",
+  },
+  // Header: solid green with logo + school name
+  coverHeader: {
+    backgroundColor: G,
+    paddingTop: 30,
+    paddingBottom: 22,
+    paddingHorizontal: 28,
+    alignItems: "center",
   },
   coverLogo: {
-    width: 72,
-    height: 72,
-    marginBottom: 18,
+    width: 62,
+    height: 62,
+    marginBottom: 14,
   },
   coverSchoolName: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 700,
     color: "#ffffff",
     textAlign: "center",
     letterSpacing: 0.5,
-    marginBottom: 6,
+    marginBottom: 5,
+  },
+  coverHeaderTagline: {
+    fontSize: 7,
+    color: "rgba(255,255,255,0.68)",
+    textTransform: "uppercase" as const,
+    letterSpacing: 1.4,
+    textAlign: "center",
+  },
+  // Gold accent stripe (Islamic art: pairing deep green with gold)
+  coverGoldBar: {
+    height: 3,
+    backgroundColor: "#c9a84c",
+  },
+  coverDarkBar: {
+    height: 2,
+    backgroundColor: G_DARK,
+  },
+  // White body
+  coverBody: {
+    flex: 1,
+    paddingVertical: 22,
+    paddingHorizontal: 26,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+  },
+  // Geometric diamond divider (inspired by Islamic geometric motifs)
+  coverDecorRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "85%",
+    marginBottom: 16,
+  },
+  coverDecorLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: G_BORDER,
+  },
+  coverDecorCrescentOuter: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: G,
+    marginHorizontal: 8,
+  },
+  coverDecorCrescentInner: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "#ffffff",
+    position: "absolute" as const,
+    top: 2,
+    left: 5,
   },
   coverTitle: {
-    fontSize: 12,
+    fontSize: 8,
     fontWeight: 600,
-    color: "rgba(255,255,255,0.85)",
+    color: G_MUTED,
+    textTransform: "uppercase" as const,
+    letterSpacing: 1.2,
     textAlign: "center",
-    marginBottom: 4,
+    marginBottom: 3,
   },
   coverPeriod: {
     fontSize: 9,
-    color: "rgba(255,255,255,0.7)",
+    fontWeight: 600,
+    color: G_MID,
     textAlign: "center",
-    marginBottom: 24,
+    marginBottom: 20,
   },
+  // Double-bordered student box (Islamic frame motif)
   coverStudentBox: {
-    backgroundColor: "rgba(255,255,255,0.18)",
-    borderRadius: 6,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignItems: "center",
+    borderWidth: 1.5,
+    borderColor: G,
+    borderRadius: 3,
+    padding: 3,
     width: "100%",
+    backgroundColor: "#ffffff",
+  },
+  coverStudentInner: {
+    borderWidth: 1,
+    borderColor: G_BORDER,
+    borderRadius: 2,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    alignItems: "center",
+    backgroundColor: G_LIGHT,
   },
   coverStudentLabel: {
     fontSize: 7,
-    color: "rgba(255,255,255,0.65)",
+    color: G_MUTED,
     textTransform: "uppercase" as const,
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
     marginBottom: 5,
   },
   coverStudentName: {
     fontSize: 15,
     fontWeight: 700,
-    color: "#ffffff",
+    color: TEXT,
     textAlign: "center",
     marginBottom: 3,
   },
   coverSection: {
     fontSize: 9,
-    color: "rgba(255,255,255,0.75)",
+    color: G_MID,
     textAlign: "center",
+  },
+  // Footer band
+  coverFooterGold: {
+    height: 3,
+    backgroundColor: "#c9a84c",
+  },
+  coverFooter: {
+    backgroundColor: G_DARK,
+    paddingVertical: 9,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  coverFooterText: {
+    fontSize: 6.5,
+    color: "rgba(255,255,255,0.6)",
+    letterSpacing: 1.1,
+    textTransform: "uppercase" as const,
   },
 
   // ── INSIDE : Grades panel (left half) ────────────────────────────────────
@@ -224,6 +357,7 @@ const styles = StyleSheet.create({
     width: "50%",
     padding: 20,
     flexDirection: "column",
+    justifyContent: "space-between",
   },
   gradesPanelHeader: {
     flexDirection: "row",
@@ -272,25 +406,27 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: G,
+    backgroundColor: G_LIGHT,
+    borderBottomWidth: 1.5,
+    borderBottomColor: G,
   },
   tableHeaderCell: {
     padding: 6,
     fontSize: 7,
     fontWeight: 700,
-    color: "#ffffff",
+    color: G,
     textTransform: "uppercase" as const,
     letterSpacing: 0.4,
   },
   subjectCol: {
     width: "32%",
     borderRightWidth: 1,
-    borderRightColor: G_DARK,
+    borderRightColor: G_BORDER,
   },
   gradeCol: {
     width: "13%",
     borderRightWidth: 1,
-    borderRightColor: G_DARK,
+    borderRightColor: G_BORDER,
     textAlign: "center",
   },
   commentsCol: {
@@ -415,6 +551,60 @@ const styles = StyleSheet.create({
     borderBottomColor: "#a0b8af",
     height: 14,
   },
+
+  // ── Conference request checkboxes ─────────────────────────────────────────
+  conferenceSection: {
+    marginBottom: 10,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: G_BORDER,
+  },
+  conferenceSectionTitle: {
+    fontSize: 7,
+    fontWeight: 700,
+    color: G_MID,
+    textTransform: "uppercase" as const,
+    letterSpacing: 0.4,
+    marginBottom: 6,
+  },
+  conferenceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 3,
+  },
+  checkbox: {
+    width: 9,
+    height: 9,
+    borderWidth: 1,
+    borderColor: TEXT,
+    marginRight: 6,
+  },
+  conferenceLabel: {
+    fontSize: 8,
+    color: TEXT,
+    fontWeight: 600,
+  },
+  conferenceWriteLines: {
+    marginLeft: 15,
+    marginBottom: 7,
+    marginTop: 2,
+  },
+  conferenceWriteRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 3,
+  },
+  conferenceWriteLabel: {
+    fontSize: 7,
+    color: G_MUTED,
+    width: 36,
+  },
+  conferenceWriteLine: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: "#a0b8af",
+    height: 11,
+  },
 })
 
 const LOGO =
@@ -441,6 +631,13 @@ function getLetterGrade(grade: number | string | null): string {
   return "F"
 }
 
+export interface ReportCardAdministrator {
+  name: string
+  position: string
+  email: string
+  phone: string
+}
+
 export interface ReportCardStudent {
   id: string
   name: string
@@ -460,6 +657,7 @@ export interface ReportCardCommentCode {
 interface ReportCardDocumentProps {
   students: ReportCardStudent[]
   commentCodes: ReportCardCommentCode[]
+  administrators: ReportCardAdministrator[]
   markingPeriodName: string
   schoolName: string
 }
@@ -467,6 +665,7 @@ interface ReportCardDocumentProps {
 export function ReportCardDocument({
   students,
   commentCodes,
+  administrators,
   markingPeriodName,
   schoolName,
 }: ReportCardDocumentProps) {
@@ -540,14 +739,40 @@ export function ReportCardDocument({
 
             {/* Front cover panel */}
             <View style={styles.coverPanel}>
-              <Image src={LOGO} style={styles.coverLogo} />
-              <Text style={styles.coverSchoolName}>{schoolName}</Text>
-              <Text style={styles.coverTitle}>Student Report Card</Text>
-              <Text style={styles.coverPeriod}>{markingPeriodName}</Text>
-              <View style={styles.coverStudentBox}>
-                <Text style={styles.coverStudentLabel}>Student</Text>
-                <Text style={styles.coverStudentName}>{student.name}</Text>
-                <Text style={styles.coverSection}>{student.sectionName}</Text>
+              {/* Bold green header */}
+              <View style={styles.coverHeader}>
+                <Image src={LOGO} style={styles.coverLogo} />
+                <Text style={styles.coverSchoolName}>{schoolName}</Text>
+                <Text style={styles.coverHeaderTagline}>Student Report Card</Text>
+              </View>
+              {/* Gold + dark green divider stripes */}
+              <View style={styles.coverGoldBar} />
+              <View style={styles.coverDarkBar} />
+              {/* White body */}
+              <View style={styles.coverBody}>
+                {/* Islamic geometric divider */}
+                <View style={styles.coverDecorRow}>
+                  <View style={styles.coverDecorLine} />
+                  <View style={styles.coverDecorCrescentOuter}>
+                    <View style={styles.coverDecorCrescentInner} />
+                  </View>
+                  <View style={styles.coverDecorLine} />
+                </View>
+                <Text style={styles.coverTitle}>Marking Period</Text>
+                <Text style={styles.coverPeriod}>{markingPeriodName}</Text>
+                {/* Double-framed student box */}
+                <View style={styles.coverStudentBox}>
+                  <View style={styles.coverStudentInner}>
+                    <Text style={styles.coverStudentLabel}>Student</Text>
+                    <Text style={styles.coverStudentName}>{student.name}</Text>
+                    <Text style={styles.coverSection}>{student.sectionName}</Text>
+                  </View>
+                </View>
+              </View>
+              {/* Gold + green footer */}
+              <View style={styles.coverFooterGold} />
+              <View style={styles.coverFooter}>
+                <Text style={styles.coverFooterText}>Nurturing Faith · Character · Excellence</Text>
               </View>
             </View>
           </Page>
@@ -569,58 +794,88 @@ export function ReportCardDocument({
           >
             {/* Grades panel */}
             <View style={styles.gradesPanel}>
-              <View style={styles.gradesPanelHeader}>
-                <Image src={LOGO} style={styles.gradesPanelLogo} />
-                <Text style={styles.gradesPanelSchool}>{schoolName}</Text>
-              </View>
-              <View style={styles.studentInfoRow}>
-                <View style={styles.infoGroup}>
-                  <Text style={styles.infoLabel}>Student: </Text>
-                  <Text style={styles.infoValue}>{student.name}</Text>
+              <View>
+                <View style={styles.gradesPanelHeader}>
+                  <Image src={LOGO} style={styles.gradesPanelLogo} />
+                  <Text style={styles.gradesPanelSchool}>{schoolName}</Text>
                 </View>
-                <View style={styles.infoGroup}>
-                  <Text style={styles.infoLabel}>Section: </Text>
-                  <Text style={styles.infoValue}>{student.sectionName}</Text>
-                </View>
-              </View>
-              <View style={styles.table}>
-                <View style={styles.tableHeader}>
-                  <Text style={[styles.tableHeaderCell, styles.subjectCol]}>Subject</Text>
-                  <Text style={[styles.tableHeaderCell, styles.gradeCol]}>Grade</Text>
-                  <Text style={[styles.tableHeaderCell, styles.gradeCol]}>Ltr</Text>
-                  <Text style={[styles.tableHeaderCell, styles.commentsCol]}>Comments</Text>
-                </View>
-                {student.subjects.map((subj, idx) => (
-                  <View
-                    key={subj.name}
-                    style={idx % 2 === 0 ? styles.tableRow : styles.tableRowAlt}
-                  >
-                    <Text style={[styles.tableCell, styles.subjectCell]}>{subj.name}</Text>
-                    <Text style={[styles.tableCell, styles.gradeCell, getGradeColor(subj.grade)]}>
-                      {subj.grade !== null && subj.grade !== undefined ? subj.grade : ""}
-                    </Text>
-                    <Text style={[styles.tableCell, styles.gradeCell, getGradeColor(subj.grade)]}>
-                      {getLetterGrade(subj.grade)}
-                    </Text>
-                    <Text style={[styles.tableCell, styles.commentsCell]}>
-                      {subj.comments.length > 0 ? subj.comments.join("; ") : "–"}
-                    </Text>
+                <View style={styles.studentInfoRow}>
+                  <View style={styles.infoGroup}>
+                    <Text style={styles.infoLabel}>Student: </Text>
+                    <Text style={styles.infoValue}>{student.name}</Text>
                   </View>
-                ))}
+                  <View style={styles.infoGroup}>
+                    <Text style={styles.infoLabel}>Section: </Text>
+                    <Text style={styles.infoValue}>{student.sectionName}</Text>
+                  </View>
+                </View>
+                <View style={styles.table}>
+                  <View style={styles.tableHeader}>
+                    <Text style={[styles.tableHeaderCell, styles.subjectCol]}>Subject</Text>
+                    <Text style={[styles.tableHeaderCell, styles.gradeCol]}>Grade</Text>
+                    <Text style={[styles.tableHeaderCell, styles.gradeCol]}>Ltr</Text>
+                    <Text style={[styles.tableHeaderCell, styles.commentsCol]}>Comments</Text>
+                  </View>
+                  {student.subjects.map((subj, idx) => (
+                    <View
+                      key={subj.name}
+                      style={idx % 2 === 0 ? styles.tableRow : styles.tableRowAlt}
+                    >
+                      <Text style={[styles.tableCell, styles.subjectCell]}>{subj.name}</Text>
+                      <Text style={[styles.tableCell, styles.gradeCell, getGradeColor(subj.grade)]}>
+                        {subj.grade !== null && subj.grade !== undefined ? subj.grade : ""}
+                      </Text>
+                      <Text style={[styles.tableCell, styles.gradeCell, getGradeColor(subj.grade)]}>
+                        {getLetterGrade(subj.grade)}
+                      </Text>
+                      <Text style={[styles.tableCell, styles.commentsCell]}>
+                        {subj.comments.length > 0 ? subj.comments.join("; ") : "–"}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
               </View>
-            </View>
 
-            {/* Hadith + Signatures panel */}
-            <View style={styles.hadithPanel}>
-              <View style={styles.hadithContent}>
-                <View style={styles.hadithDecor} />
-                <Text style={styles.hadithTitle}>Knowledge Hadith</Text>
-                <Text style={styles.hadithEnglish}>
-                  "Seeking knowledge is an obligation upon every Muslim." (Ibn
-                  Majah)
-                </Text>
-              </View>
+              {/* Conference checkboxes + Signatures */}
               <View style={styles.sigSection}>
+                <View style={styles.conferenceSection}>
+                  <Text style={styles.conferenceSectionTitle}>Conference Request</Text>
+
+                  {["Period 1", "Period 2", "Period 3"].map((period) => (
+                    <Fragment key={period}>
+                      <View style={styles.conferenceRow}>
+                        <View style={styles.checkbox} />
+                        <Text style={styles.conferenceLabel}>{period} Teacher Requests Conference</Text>
+                      </View>
+                      <View style={styles.conferenceWriteLines}>
+                        <View style={styles.conferenceWriteRow}>
+                          <Text style={styles.conferenceWriteLabel}>Email:</Text>
+                          <View style={styles.conferenceWriteLine} />
+                        </View>
+                        <View style={styles.conferenceWriteRow}>
+                          <Text style={styles.conferenceWriteLabel}>Phone:</Text>
+                          <View style={styles.conferenceWriteLine} />
+                        </View>
+                      </View>
+                    </Fragment>
+                  ))}
+
+                  <View style={styles.conferenceRow}>
+                    <View style={styles.checkbox} />
+                    <Text style={styles.conferenceLabel}>Parent Requests Conference</Text>
+                  </View>
+                  <View style={styles.conferenceWriteLines}>
+                    <View style={styles.conferenceWriteRow}>
+                      <Text style={styles.conferenceWriteLabel}>Email:</Text>
+                      <View style={styles.conferenceWriteLine} />
+                    </View>
+                    <View style={styles.conferenceWriteRow}>
+                      <Text style={styles.conferenceWriteLabel}>Phone:</Text>
+                      <View style={styles.conferenceWriteLine} />
+                    </View>
+                  </View>
+                </View>
+
                 <View style={styles.sigRow}>
                   <View style={styles.sigBlock}>
                     <View style={styles.sigLine} />
@@ -636,6 +891,35 @@ export function ReportCardDocument({
                   <View style={styles.dateLine} />
                 </View>
               </View>
+            </View>
+
+            {/* Hadith + Admin panel */}
+            <View style={styles.hadithPanel}>
+              <View style={styles.hadithContent}>
+                <View style={styles.hadithDecor} />
+                <Text style={styles.hadithTitle}>Knowledge Hadith</Text>
+                <Text style={styles.hadithEnglish}>
+                  "Seeking knowledge is an obligation upon every Muslim." (Ibn
+                  Majah)
+                </Text>
+              </View>
+              {administrators.length > 0 && (
+                <View style={styles.adminBox}>
+                  <Text style={styles.adminBoxTitle}>Administration Contact</Text>
+                  {administrators.map((admin, idx) => (
+                    <View
+                      key={idx}
+                      style={idx === administrators.length - 1 ? styles.adminEntryLast : styles.adminEntry}
+                    >
+                      <Text style={styles.adminName}>{admin.name}</Text>
+                      <Text style={styles.adminPosition}>{admin.position}</Text>
+                      <Text style={styles.adminContact}>
+                        {admin.email}{admin.phone ? `  ·  ${admin.phone}` : ""}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
             </View>
           </Page>
         </Fragment>

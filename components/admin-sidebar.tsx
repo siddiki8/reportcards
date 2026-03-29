@@ -16,6 +16,7 @@ import {
   LogOut,
   Layers,
   Upload,
+  UserCog,
 } from "lucide-react"
 
 const navItems = [
@@ -24,6 +25,7 @@ const navItems = [
   { href: "/admin/students", label: "Import Students", icon: Upload },
   { href: "/admin/marking-periods", label: "Marking Periods", icon: Calendar },
   { href: "/admin/comments", label: "Comment Codes", icon: MessageSquareText },
+  { href: "/admin/administrators", label: "Administrators", icon: UserCog },
   { href: "/admin/reports", label: "Report Cards", icon: FileText },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ]
